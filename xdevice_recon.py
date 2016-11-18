@@ -94,7 +94,7 @@ X_i_pred = np.argsort(y_pred)[1:]
 X_i_preds = X_i_pred[:,:4]
 
 good = 1
-ix = np.in1d(y_true.ravel(), good).reshape(x.shape)
+ix = np.in1d(y_true.ravel(), good).reshape(y_true.shape)
 true_loc = np.column_stack(np.where(ix))
 
 #now want to iterate through values in pred and check if they match the ones in true loc
