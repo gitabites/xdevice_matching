@@ -10,7 +10,7 @@ from __future__ import divison
 
 xids = pd.read_csv('xdevrecon.csv')
 
-#start with our lat/long data. We're going to run haversine dist on these dudes. 
+#start with our lat/long data. 
 #define the haversine function
 def haversine(latlon1, latlon2):
     lon1 = latlon1[1]
@@ -107,19 +107,5 @@ for i in true_loc:
 			rows.append(0)
 
 sum(rows)/len(rows)					
-
-
-
-#y_truef = y_true.flatten()
-#y_predf = y_pred.flatten()
-
-#average_precision_score(y_truef,y_predf)
-#log_poss(ytrue,ypred)
-
-#so i have my arg sort matrix and now i need to see how accurate it is 
-#like, is the location of the predicted x,y the same as the actual?
-
-
-#need a matrix of the indices of my validation matrix and then can compare that 
 
 
