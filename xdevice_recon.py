@@ -8,9 +8,9 @@ import pandas as pd
 from math import radians, cos, sin, asin, sqrt
 from __future__ import divison
 
-xids = pd.read_csv('xdevrecon.csv')
 
-#start with our lat/long data. 
+
+#start with our lat/long data. We're going to run haversine dist on these dudes. 
 #define the haversine function
 def haversine(latlon1, latlon2):
     lon1 = latlon1[1]
@@ -55,7 +55,7 @@ catcosdf = 1- pair.cosine_similarity(cats, dense_output=True)
 #now multiply these two matrices to get our total similarity matrix
 haversine_dist = ds
 cosine_dist=catcosdf
-alpha = 0.5
+alpha = 0.1
 y_pred = alpha*haversine_dist + (1-alpha)*cosine_dist 
 y_pred
 
@@ -71,7 +71,7 @@ def createMapping(listuniqueid):
 #this creates a matrix whose l/w are the lengths of the mapping dict    
 def createGTMatrix(mapping, matches):
     m = np.zeros([len(mapping), len(mapping)])
-    for xid1, xid2 in matches:
+    for i in range(0,len(matches)):
     	try:
         	m[mapping[xid1],mapping[xid2]] = 1
         	m[mapping[xid2],mapping[xid1]] = 1
@@ -99,13 +99,14 @@ true_loc = np.column_stack(np.where(ix))
 
 #now want to iterate through values in pred and check if they match the ones in true loc
 rows = []
-for i in true_loc:
-	for j in X_i_preds:
-		if (i[1] == j[1] or i[1] == j[2] or i[1] == j[3]):
+for i in range(0,len(X_i_preds)):
+	users_i = [users for users in true_loc if users[0]==i]
+	for j in range(0,len(users_i)):	
+		if (X_i_preds[i][1] == users_i[j][1] or X_i_preds[i][2] == users_i[j][1] or X_i_preds[i][3] == users_i[j][1]):
 			rows.append(1)
 		else:
 			rows.append(0)
 
-sum(rows)/len(rows)					
+sum(rows)/len(X_i_preds)					
 
 
