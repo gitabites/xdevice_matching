@@ -17,6 +17,8 @@ for m in range(2,4976):
 
     xids = xids.append(xids_sym)
     #xids = xids.drop_duplicates(['xid','match'])
+    xids = xids.drop_duplicates('xid')
+    xids = xids.drop_duplicates('match')
     size = len(xids.drop_duplicates('xid'))
     #print 'The size is ', size
     #print len(xids)
