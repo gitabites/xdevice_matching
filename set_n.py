@@ -9,13 +9,14 @@ import pandas as pd
 from math import radians, cos, sin, asin, sqrt
 #size=2000
 print 'size,accuracy'
-for m in range(2,4976):
+for m in range(5,3000):
     xids = pd.read_csv('xdevrecon.csv',nrows=m)
     xids_sym = pd.read_csv('xdevrecon2.csv',nrows=m)
     xids_sym = xids_sym[['xid', 'match', 'score', 'sde', 'sos', 'sbr', 'lat', 'long', 'lci',
            'lco', '_col10']]
 
     xids = xids.append(xids_sym)
+
     #xids = xids.drop_duplicates(['xid','match'])
     size = len(xids.drop_duplicates('xid'))
     #print 'The size is ', size
@@ -36,6 +37,11 @@ for m in range(2,4976):
         return c * r
 
     xids_la = xids.drop_duplicates('xid')
+    xids_la = xids_la.drop_duplicates('match')
+    xids_la=xids_la.reset_index()
+    xids=xids_la
+    size = len(xids)
+
     #print 'length is ',  len(xids_la)
     X = xids_la[['lat','long']]
     X
@@ -66,7 +72,7 @@ for m in range(2,4976):
     #now multiply these two matrices to get our total similarity matrix
     haversine_dist = ds
     cosine_dist=catcosdf
-    alpha = 0.1
+    alpha = 0.9
     y_pred = alpha*haversine_dist + (1-alpha)*cosine_dist
     y_pred
 
@@ -86,8 +92,9 @@ for m in range(2,4976):
             try:
                 m[mapping[xid1],mapping[xid2]] = 1.0
                 m[mapping[xid2],mapping[xid1]] = 1.0
-            except IndexError:
-                continue
+            except:
+                pass
+                #continue
         return m
 
     xids1 = xids
@@ -98,7 +105,7 @@ for m in range(2,4976):
 
     mapping = createMapping(listuniqueid.unique())
     y_true = createGTMatrix(mapping,matches)
-
+    #print 'y_pred', y_pred
     X_i_pred = np.argsort(y_pred)[1:]
 
     ###SHORTLIST SECTION -- FOR FULLSIES PLZ SKIP TO NEXT SECTION###
@@ -108,7 +115,9 @@ for m in range(2,4976):
     good = 1
     ix = np.in1d(y_true.ravel(), good).reshape(y_true.shape)
     true_loc = np.column_stack(np.where(ix))
-
+    #print 'Predictions', X_i_pred
+    #print 'Actual', true_loc
+    #print 'Shortlist', shortlist
     #now want to iterate through values in pred and check if they match the ones in true loc
     rows = []
     for i in range(0,len(shortlist)):
