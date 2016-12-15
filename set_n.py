@@ -130,4 +130,4 @@ for m in range(5,3000):
                 rows.append(0)
 
     accuracy = sum(rows)/len(shortlist)
-    print str(m) + ',' + str(accuracy)
+    print str(m) + ',' + str(accuracy), ' random = ', 1.0/len(shortlist)
